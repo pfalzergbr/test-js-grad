@@ -1,3 +1,5 @@
+# Javascript Test Submission - Gabor Pfalzer
+
 # Graduate JS exercise
 
 Hello, thanks for taking the time to complete this exercise.
