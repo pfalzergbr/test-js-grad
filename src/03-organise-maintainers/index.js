@@ -53,22 +53,31 @@ module.exports = async function organiseMaintainers() {
   const { content } = response.data;
 
   const maintainers = [];
+  // Iterate over packages. Set up variables for easeier read.
   for (i in content) {
     const packageName = content[i].package.name;
     const packageMaintainers = content[i].package.maintainers;
+    // Nested loop iterating over package maintainers in packages.
     for (let j in packageMaintainers) {
       const username = packageMaintainers[j].username;
+      // Checking existing maintainers array if user is already added. 
       const existingMaintainer = maintainers.find(
         maintainer => maintainer.username === username,
       );
-      if (existingMaintainer) {
+      /*If already added, pushing the new package name to the packageNames array. 
+        Initially, it was sorting here straight away, but that would result in one more nest of iteration.
+        Sorting logic is handled together now, outside the loop. Only sorting all of them once should 
+        improve bigO notation. at this point.
+      */
+       if (existingMaintainer) {
         existingMaintainer.packageNames.push(packageName);
+      // Create a new user object if doesn`t yet exist.
       } else {
         maintainers.push({ username, packageNames: [packageName] });
       }
     }
   }
-
+  // Extracted sorter function for better readability. 
   const userSorter = (a, b) => {
     const valueA = a.username;
     const valueB = b.username;
@@ -86,3 +95,5 @@ module.exports = async function organiseMaintainers() {
     .sort(userSorter);
   return sortedMaintainers;
 };
+
+// Thank you very much for reviewing my code! Looking forward to your feedback. 
